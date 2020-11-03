@@ -1,0 +1,17 @@
+<div class="completer-dropdown-holder" *ngIf="isOpen()">
+  <div
+    class="completer-dropdown"
+    #dropdown
+    [ngStyle]="{
+      'pointer-events': optionList.length === 0 ? 'none' : 'auto',
+      'max-height.px': _visibleOptions ? _visibleOptions * _optionHeight : _dropdownHeight
+    }"
+  >
+    <div class="completer-row-wrapper">
+      <div *ngIf="textNoResults && optionList.length === 0" class="completer-no-results" #noResults>
+        {{ textNoResults }}
+      </div>
+      <ng-content #content></ng-content>
+    </div>
+  </div>
+</div>

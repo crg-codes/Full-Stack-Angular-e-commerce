@@ -1,0 +1,77 @@
+<label
+  class="mdb-select-label"
+  [ngClass]="{
+    active: _labelActive,
+    focused: _hasFocus || _isOpen,
+    outline: outline,
+    disabled: disabled
+  }"
+  >{{ label }}</label
+>
+<div
+  #selectWrapper
+  [attr.tabindex]="disabled ? -1 : tabindex"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+  class="mdb-select-wrapper"
+  [ngClass]="{ disabled: disabled }"
+  (click)="open()"
+>
+  <div
+    #selectValue
+    class="mdb-select-value form-control"
+    [ngClass]="{ focused: _hasFocus || _isOpen }"
+  >
+    <span
+      *ngIf="placeholder && !selectionView"
+      class="mdb-select-placeholder"
+      [ngClass]="{ disabled: disabled }"
+      >{{ placeholder }}</span
+    >
+    <span *ngIf="selectionView" class="mdb-select-value-label" [ngClass]="{ disabled: disabled }">
+      <span>{{ selectionView }}</span>
+    </span>
+    <div class="mdb-select-icons-wrapper">
+      <span
+        class="mdb-select-clear-btn"
+        [ngClass]="{ disabled: disabled }"
+        [attr.tabindex]="clearButtonTabindex"
+        *ngIf="allowClear && hasSelected"
+        [ngClass]="{ focused: _hasFocus || _isOpen }"
+        (mousedown)="handleSelectionClear($event)"
+        >&#x2715;</span
+      >
+      <span
+        class="mdb-select-arrow"
+        [ngClass]="{ focused: _hasFocus || _isOpen, disabled: disabled }"
+      ></span>
+    </div>
+  </div>
+</div>
+
+<ng-template #dropdownTemplate>
+  <div
+    #dropdown
+    [@dropdownAnimation]="'visible'"
+    tabindex="-1"
+    class="mdb-select-dropdown {{ dropdownClass }}"
+  >
+    <ng-content select="mdb-select-filter"></ng-content>
+    <div
+      #optionsWrapper
+      class="mdb-select-options-wrapper"
+      [ngStyle]="{ 'max-height.px': dropdownHeight }"
+    >
+      <div class="mdb-select-options">
+        <ng-content select="mdb-select-all-option"></ng-content>
+        <span class="mdb-select-no-results" *ngIf="filter && _showNoResultsMsg && notFoundMsg">{{
+          notFoundMsg
+        }}</span>
+        <ng-content select="mdb-select-option, mdb-option-group"></ng-content>
+      </div>
+    </div>
+    <div #customContent class="mdb-select-custom-content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</ng-template>

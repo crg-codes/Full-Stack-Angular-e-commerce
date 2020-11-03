@@ -1,0 +1,11 @@
+<ul #sidenav id="slide-out" class="{{ class }} side-nav">
+  <ng-content></ng-content>
+</ul>
+
+<div
+  (click)="hide()"
+  (touchstart)="hide()"
+  #overlay
+  id="sidenav-overlay"
+  style="display: none; opacity: 0"
+></div>

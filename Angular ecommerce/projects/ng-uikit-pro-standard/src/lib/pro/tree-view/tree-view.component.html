@@ -1,0 +1,126 @@
+<!-- child nodes -->
+<ng-template #tree let-nodeChildren let-idx="idx">
+  <ul class="mdb-tree-list">
+    <li *ngFor="let node of nodeChildren; let n = index" class="mdb-tree-list-node">
+      <div class="mdb-tree-container">
+        <div *ngIf="node[childrenField] && node[childrenField].length > 0; else emptyIcon">
+          <span class="mdb-tree-icon-container">
+            <i
+              tabindex="1"
+              aria-hidden="true"
+              [ngClass]="
+                toggle[idx + '_' + n] ? 'mdb-tree-rotate-icon-open' : 'mdb-tree-rotate-icon-closed'
+              "
+              (keydown)="onKeydown($event, idx + '_' + n)"
+              (click)="toggle[idx + '_' + n] = !toggle[idx + '_' + n]"
+              class="mdb-tree-indicator "
+            ></i>
+          </span>
+        </div>
+        <ng-template #emptyIcon
+          ><span class="mdb-tree-icon-container"
+            ><i class="mdb-tree-empty-icon" style="display: block" aria-hidden="true"></i
+          ></span>
+        </ng-template>
+        <div
+          class="mdb-tree-checkbox-container"
+          *ngIf="checkboxes && node[checkboxesField] !== undefined"
+        >
+          <mdb-checkbox
+            class="checkbox-filled"
+            [filledIn]="true"
+            [tabIndex]="1"
+            [attr.id]="node[textField]"
+            (keydown)="onKeydownCheckbox($event, node, idx + '_' + n)"
+            (click)="checkNodes(node); updateNodesCheckedValues(node, idx + '_' + n)"
+            [checked]="node[checkboxesField]"
+          ></mdb-checkbox>
+        </div>
+        <div *ngIf="checkboxes && node[checkboxesField] === undefined">
+          <div class="mdb-tree-checkbox-null-container"></div>
+        </div>
+
+        <div
+          *ngIf="toggleOnTitleClick"
+          class="mdb-tree-text-field"
+          [ngStyle]="{
+            cursor: node[childrenField] && node[childrenField].length > 0 ? 'pointer' : 'default'
+          }"
+          (click)="toggle[idx + '_' + n] = !toggle[idx + '_' + n]"
+        >
+          {{ node[textField] }}
+        </div>
+
+        <div *ngIf="!toggleOnTitleClick" class="mdb-tree-text-field mdb-tree-text-ellipsis">
+          {{ node[textField] }}
+        </div>
+      </div>
+      <div *ngIf="node[childrenField] && toggle[idx + '_' + n]">
+        <ng-container
+          *ngTemplateOutlet="tree; context: { $implicit: node[childrenField], idx: idx + '_' + n }"
+        ></ng-container>
+      </div>
+    </li>
+  </ul>
+</ng-template>
+<!-- first nodes -->
+<ul class="mdb-tree-list">
+  <li *ngFor="let node of nodes; let i = index" class="mdb-tree-list-node">
+    <div class="mdb-tree-container">
+      <div *ngIf="node[childrenField] && node[childrenField].length > 0; else emptyIcon">
+        <span class="mdb-tree-icon-container">
+          <i
+            tabindex="1"
+            aria-hidden="true"
+            [ngClass]="toggle[i] ? 'mdb-tree-rotate-icon-open' : 'mdb-tree-rotate-icon-closed'"
+            (keydown)="onKeydown($event, i)"
+            (click)="toggle[i] = !toggle[i]"
+            class="mdb-tree-indicator"
+          ></i>
+        </span>
+      </div>
+      <ng-template #emptyIcon
+        ><span class="mdb-tree-icon-container"
+          ><i class="mdb-tree-empty-icon" style="display: block" aria-hidden="true"></i
+        ></span>
+      </ng-template>
+      <div
+        class="mdb-tree-checkbox-container"
+        *ngIf="checkboxes && node[checkboxesField] !== undefined"
+      >
+        <mdb-checkbox
+          class="checkbox-filled"
+          [checked]="node[checkboxesField]"
+          [filledIn]="true"
+          [tabIndex]="1"
+          [attr.id]="node[textField]"
+          (keydown)="onKeydownCheckbox($event, node, i)"
+          (click)="checkNodes(node); updateNodesCheckedValues(node, i)"
+        ></mdb-checkbox>
+      </div>
+      <div *ngIf="checkboxes && node[checkboxesField] === undefined">
+        <div class="mdb-tree-checkbox-null-container"></div>
+      </div>
+
+      <div
+        *ngIf="toggleOnTitleClick"
+        class="mdb-tree-text-field"
+        [ngStyle]="{
+          cursor: node[childrenField] && node[childrenField].length > 0 ? 'pointer' : 'default'
+        }"
+        (click)="toggle[i] = !toggle[i]"
+      >
+        {{ node[textField] }}
+      </div>
+
+      <div *ngIf="!toggleOnTitleClick" class="mdb-tree-text-field mdb-tree-text-ellipsis">
+        {{ node[textField] }}
+      </div>
+    </div>
+    <div *ngIf="node[childrenField] && toggle[i]">
+      <ng-container
+        *ngTemplateOutlet="tree; context: { $implicit: node[childrenField], idx: i }"
+      ></ng-container>
+    </div>
+  </li>
+</ul>

@@ -1,0 +1,128 @@
+<div class="mdb-timepicker-modal" cdkTrapFocus>
+  <!-- HEADER -->
+  <div class="mdb-timepicker-header">
+    <!-- TIME -->
+    <div class="mdb-timepicker-time">
+      <span
+        (click)="_showHoursClock()"
+        (keydown.arrowdown)="_arrowChangeHour($event.key)"
+        (keydown.arrowup)="_arrowChangeHour($event.key)"
+        (keydown.enter)="_showHoursClock()"
+        [ngClass]="{ active: _showHours }"
+        class="hour-digital"
+        #focus
+        tabindex="0"
+      >
+        {{ _selectedTime.h }}</span
+      >:<span
+        (click)="_showMinutesClock()"
+        (keydown.arrowdown)="_arrowChangeMinute($event.key)"
+        (keydown.arrowup)="_arrowChangeMinute($event.key)"
+        (keydown.enter)="_showMinutesClock()"
+        [ngClass]="{ 'active': !_showHours, 'disabled': _minuteDigitalDisabled }"
+        class="minute-digital"
+        #digitalMinute
+        tabindex="0"
+        >{{ _selectedTime.m }}</span
+      >
+    </div>
+    <div class="mdb-timepicker-ampm" *ngIf="twelveHour">
+      <span
+        (click)="_setAmPm('AM')"
+        (keydown.enter)="_setAmPm('AM')"
+        [ngClass]="{ active: _selectedTime.ampm == 'AM' }"
+        tabindex="0"
+        >AM</span
+      >
+      <span
+        (click)="_setAmPm('PM')"
+        (keydown.enter)="_setAmPm('PM')"
+        [ngClass]="{ active: _selectedTime.ampm == 'PM' }"
+        tabindex="0"
+        >PM</span
+      >
+    </div>
+  </div>
+  <!-- /Header -->
+  <!-- Body -->
+  <div class="mdb-timepicker-body">
+    <div class="mdb-timepicker-plate" #plate>
+      <div class="mdb-timepicker-canvas">
+        <svg class="mdb-timepicker-svg" width="270" height="270" #svg>
+          <g transform="translate(135,135)" #g>
+            <line x1="0" y1="0" x2="0" y2="-90" #hand></line>
+            <circle class="mdb-timepicker-canvas-fg" r="5" cx="0" cy="-110" #fg></circle>
+            <circle class="mdb-timepicker-canvas-bg" r="20" cx="0" cy="-110" #bg></circle>
+            <circle class="mdb-timepicker-canvas-bearing" cx="0" cy="0" r="2" #bearing></circle>
+          </g>
+        </svg>
+      </div>
+
+      <div
+        [ngClass]="{ 'mdb-timepicker-dial-out': !_showHours }"
+        [ngStyle]="{ visibility: !_showHours ? 'hidden' : 'visible' }"
+        #hoursPlate
+        class="mdb-timepicker-dial mdb-timepicker-hours"
+      >
+        <div
+          [ngClass]="{ disabled: tick.disabled }"
+          [ngStyle]="{ left: tick.left + 'px', top: tick.top + 'px' }"
+          *ngFor="let tick of _hoursTicks"
+          class="mdb-timepicker-tick"
+          id="{{ tick.hour }}"
+          style="font-size: 140%;"
+        >
+          {{ tick.hour }}
+        </div>
+      </div>
+      <div
+        [ngClass]="{ 'mdb-timepicker-dial-out': _showHours }"
+        [ngStyle]="{ visibility: _showHours ? 'hidden' : 'visible' }"
+        #minutesPlate
+        class="mdb-timepicker-dial mdb-timepicker-minutes"
+      >
+        <div
+          [ngClass]="{ disabled: tick.disabled }"
+          [ngStyle]="{ left: tick.left + 'px', top: tick.top + 'px' }"
+          *ngFor="let tick of _minutesTicks"
+          class="mdb-timepicker-tick"
+          style="font-size: 120%;"
+        >
+          {{ tick.min }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Boody -->
+  <!-- Footer -->
+  <div class="mdb-timepicker-footer">
+    <button
+      (click)="_clearBtnClicked()"
+      *ngIf="clearButton"
+      class="mdb-timepicker-btn mdb-timepicker-clear"
+      mdbWavesEffect
+      type="button"
+    >
+      {{ clearButton }}
+    </button>
+    <button
+      (click)="_closeBtnClicked()"
+      *ngIf="closeButton"
+      class="mdb-timepicker-btn mdb-timepicker-close"
+      mdbWavesEffect
+      type="button"
+    >
+      {{ closeButton }}
+    </button>
+    <button
+      (click)="_okBtnClicked()"
+      [ngClass]="{ disabled: _okButtonDisabled }"
+      class="mdb-timepicker-btn mdb-timepicker-ok"
+      mdbWavesEffect
+      type="button"
+    >
+      {{ okButton }}
+    </button>
+  </div>
+  <!-- /Footer -->
+</div>

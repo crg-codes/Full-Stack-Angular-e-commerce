@@ -1,0 +1,102 @@
+<label *ngIf="label !== ''" [ngClass]="{ active: labelActive, focused: focused }">
+  {{ label }}
+</label>
+<div
+  #selection
+  [attr.tabindex]="disabled ? -1 : tabindex"
+  [ngClass]="{ open: isOpen, focus: hasFocus, below: isBelow, disabled: disabled }"
+  (mousedown)="onSelectContainerClick($event)"
+  (focus)="onSelectContainerFocus()"
+  (blur)="onSelectContainerBlur()"
+  (keydown)="onSelectContainerKeydown($event)"
+  (window:resize)="onWindowResize()"
+  [attr.role]="filterEnabled ? 'combobox' : 'listbox'"
+  [attr.aria-disabled]="disabled"
+  [attr.multiselectable]="multiple"
+  [attr.aria-expanded]="isOpen"
+  [attr.aria-required]="required"
+  [attr.aria-haspopup]="true"
+>
+  <div
+    #singleContainer
+    class="single form-control"
+    *ngIf="!multiple"
+    [ngClass]="{ focused: focused }"
+  >
+    <div class="value" *ngIf="optionList.hasSelected()">
+      {{ optionList.selection[0].label }}
+    </div>
+    <div class="placeholder" *ngIf="!optionList.hasSelected()">
+      {{ placeholderView }}
+    </div>
+    <div
+      #clear
+      class="clear"
+      *ngIf="allowClear && hasSelected"
+      (mousedown)="onClearSelectionClick($event)"
+    >
+      &#x2715;
+    </div>
+    <span class="mdb-select-toggle" [ngClass]="{ focused: focused }"></span>
+  </div>
+
+  <div
+    #multipleContainer
+    class="multiple form-control"
+    *ngIf="multiple"
+    [ngClass]="{ focused: focused }"
+  >
+    <div class="placeholder" *ngIf="!optionList.hasSelected()">
+      {{ placeholderView }}
+    </div>
+
+    <div [ngStyle]="allowClear && { 'width.%': 90 }" class="option">
+      <span *ngFor="let option of optionList.selection">
+        {{ option.label }}<span class="deselect-option">,</span>
+      </span>
+    </div>
+
+    <div
+      #clear
+      class="clear"
+      *ngIf="allowClear && hasSelected"
+      (mousedown)="onClearSelectionClick($event)"
+    >
+      &#x2715;
+    </div>
+
+    <span class="mdb-select-toggle" [ngClass]="{ focused: focused }"></span>
+  </div>
+</div>
+<mdb-select-dropdown
+  *ngIf="isOpen"
+  #dropdown
+  [enableSelectAll]="enableSelectAll"
+  [multiple]="multiple"
+  [dropdownHeight]="dropdownHeight"
+  [dropdownMaxHeight]="dropdownMaxHeight"
+  [optionHeight]="optionHeight"
+  [optionList]="optionList"
+  [notFoundMsg]="notFoundMsg"
+  [customClass]="customClass"
+  [highlightColor]="highlightColor"
+  [highlightTextColor]="highlightTextColor"
+  [filterEnabled]="filterEnabled"
+  [filterAutocomplete]="filterAutocomplete"
+  [placeholder]="filterPlaceholder"
+  [selectAllLabel]="selectAllLabel"
+  [outline]="outline"
+  [top]="top"
+  [left]="left"
+  [width]="width"
+  (close)="onDropdownClose($event)"
+  (optionClicked)="onDropdownOptionClicked($event)"
+  (singleFilterClick)="onSingleFilterClick()"
+  (singleFilterInput)="onSingleFilterInput($event)"
+  (singleFilterKeydown)="onSingleFilterKeydown($event)"
+  (selectAll)="onSelectAll($event)"
+  (animationDone)="onDropdownAnimationDone()"
+  (animationStart)="onDropdownAnimationStart()"
+>
+  <ng-content></ng-content>
+</mdb-select-dropdown>
